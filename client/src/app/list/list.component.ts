@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListService } from '../service/list.service';
 import { List } from '../models/list';
+import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,CardComponent],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
@@ -20,7 +21,8 @@ export class ListComponent implements OnInit {
   isModalOpen = false;
   currentList: List | null = null;
   teste = false
-  cardSelected: null = null
+  cardSelected: boolean = false
+  cardId!: number
 
   nomeLista: string = ''
   cardname: string = ''
@@ -47,6 +49,14 @@ export class ListComponent implements OnInit {
       next: response => this.lists = response,
       error: error => console.error(error)
     });
+  }
+
+  openCard(idCard: number){
+    this.cardSelected = true
+    this.cardId = idCard
+  }
+  cancelCard(){
+    this.cardSelected = false
   }
 
   openCardModal(list: List) {

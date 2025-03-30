@@ -1,1 +1,37 @@
-<p>card works!</p>
+<div class="card-container">
+  <div class="card-header">
+    <h3 class="card-title">{{card.cardname}}</h3>
+    <span class="card-priority" [ngClass]="{
+      'low-priority': card.prioridade === 1,
+      'medium-priority': card.prioridade === 2,
+      'high-priority': card.prioridade === 3
+    }">
+      {{card.prioridade}}
+    </span>
+  </div>
+
+  <div class="card-body">
+    <p class="card-description">{{card.descricao}}</p>
+
+    <div class="card-details">
+      <div class="card-meta">
+        <div class="card-meta-item">
+          <i class="material-icons">person</i>
+          <span>{{card.responsavel}}</span>
+        </div>
+        <div class="card-meta-item">
+          <i class="material-icons">create</i>
+          <span>{{card.createItem | date: "dd/MM/yyyy"}}</span>
+        </div>
+        <div class="card-meta-item">
+          <i class="material-icons">calendar_today</i>
+          <span>{{card.datafinal | date: "dd/MM/yyyy"}}</span>
+        </div>
+        <div class="card-meta-item">
+          <i class="material-icons">account_circle</i>
+          <span>{{card.criadoPor}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,16 +15,19 @@
 
       <div class="list-content">
         @for (card of list.cards; track card.id) {
-        <div class="card">
+        <div class="card" (click)="openCard(card.id)">
           <span>{{ card.cardname }}</span>
           <span>{{ card.datafinal | date : "dd/MM/yyyy" }}</span>
           <span>{{ card.responsavel }}</span>
           <span>{{ card.prioridade }}</span>
         </div>
-        @if (cardSelected) {
-
         }
-        }
+      </div>
+    </div>
+    } @if (cardSelected) {
+    <div class="modal-overlay" (click)="cancelCard()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-card [idCard]="cardId"></app-card>
       </div>
     </div>
     }
@@ -34,10 +37,9 @@
       <button class="add-list-btn" (click)="startTeste()">
         <i class="plus-icon">+</i> Adicionar Lista
       </button>
-      }
-      @if (teste) {
-        <input type="text" [(ngModel)]="nomeLista" name="" id="" autofocus>
-        <button class="add-list-btn" (click)="addList(nomeLista)">Add</button>
+      } @if (teste) {
+      <input type="text" [(ngModel)]="nomeLista" name="" id="" autofocus />
+      <button class="add-list-btn" (click)="addList(nomeLista)">Add</button>
       }
     </div>
   </div>
@@ -48,14 +50,19 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h2>Criar Novo Card</h2>
     <div class="modal-form">
-      <input type="text" [(ngModel)]="cardname" placeholder="Nome do Card" required />
-      <input type="text" [(ngModel)]="descricao"  placeholder="Descrição" />
-      <input type="date" [(ngModel)]="datafinal"  />
-      <select [(ngModel)]="prioridade" >
+      <input
+        type="text"
+        [(ngModel)]="cardname"
+        placeholder="Nome do Card"
+        required
+      />
+      <input type="text" [(ngModel)]="descricao" placeholder="Descrição" />
+      <input type="date" [(ngModel)]="datafinal" />
+      <select [(ngModel)]="prioridade">
         <option value="">Selecione a Prioridade</option>
-        <option value=1>Baixa</option>
-        <option value=2>Média</option>
-        <option value=3>Alta</option>
+        <option value="1">Baixa</option>
+        <option value="2">Média</option>
+        <option value="3">Alta</option>
       </select>
 
       <div class="modal-actions">

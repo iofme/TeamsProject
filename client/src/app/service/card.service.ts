@@ -10,7 +10,7 @@ export class CardService {
   http = inject(HttpClient)
 
   getCard(id:number){
-    this.http.get<Card>(`http://localhost:5240/api/card/${id}`)
+    return this.http.get<Card>(`http://localhost:5240/api/card/${id}`)
   }
 
   createCard(cardname: string, descricao: string, datafinal:string, prioridade: number, listaCardsId: number){
