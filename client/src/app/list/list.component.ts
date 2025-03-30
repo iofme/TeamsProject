@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ListService } from '../service/list.service';
 import { List } from '../models/list';
 import { CardComponent } from '../card/card.component';
+import { AccountService } from '../service/account.service';
 
 @Component({
   selector: 'app-board',
@@ -17,6 +18,7 @@ import { CardComponent } from '../card/card.component';
 export class ListComponent implements OnInit {
   lists: List[] = [];
   listService = inject(ListService);
+  accountsevice = inject(AccountService)
   cardService = inject(CardService)
   isModalOpen = false;
   currentList: List | null = null;

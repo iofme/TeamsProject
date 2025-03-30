@@ -1,5 +1,6 @@
 <div class="board-container">
   <div class="board">
+    @if (accountsevice.currentUser()?.token) {
     @for (list of lists; track list.id) {
     <div class="list">
       <div class="list-header">
@@ -42,6 +43,7 @@
       <button class="add-list-btn" (click)="addList(nomeLista)">Add</button>
       }
     </div>
+  }
   </div>
 </div>
 
