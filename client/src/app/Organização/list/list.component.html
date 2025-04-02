@@ -1,0 +1,135 @@
+<div class="board-container">
+  <div class="board">
+    @if (accountsevice.currentUser()?.token) {
+      @for (list of lists; track list.id) {
+        <div class="list">
+          <div class="list-header">
+            <h3>{{ list.nomeLista }}</h3>
+            <div class="list-actions">
+              <button class="list-action-btn" (click)="deleteList(list.id)" title="Excluir lista">
+                <i class="material-icons">delete</i>
+              </button>
+              <button class="list-action-btn" (click)="openCardModal(list)" title="Adicionar cartão">
+                <i class="material-icons">add</i>
+              </button>
+            </div>
+          </div>
+
+          <div class="list-content">
+            @for (card of list.cards; track card.id) {
+              <div class="card-wrapper">
+                <div class="card" [attr.data-priority]="card.prioridade" (click)="openCard(card.id)">
+                  <div class="card-title">{{ card.cardname }}</div>
+                  <div class="card-info">
+                    <div class="card-date">
+                      <i class="material-icons" style="font-size: 12px;">calendar_today</i>
+                      {{ card.datafinal | date : "dd/MM/yyyy" }}
+                    </div>
+                    <div class="card-assignee">{{ card.responsavel }}</div>
+                  </div>
+                  <div class="card-priority-badge priority-{{card.prioridade}}">
+                  </div>
+                </div>
+                <button class="delete-card-btn" (click)="deleteCard(card.id); $event.stopPropagation();">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+            }
+            @if (list.cards.length === 0) {
+              <div class="empty-list-message">
+                Nenhum cartão. Clique em + para adicionar.
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Card Modal -->
+      @if (cardSelected) {
+        <div class="modal-overlay" (click)="cancelCard()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <app-card [idCard]="cardId"></app-card>
+          </div>
+        </div>
+      }
+
+      <!-- Add List Container -->
+      <div class="add-list-container">
+        @if (!teste) {
+          <button class="add-list-btn" (click)="startTeste()">
+            <i class="material-icons">add</i> Adicionar Lista
+          </button>
+        } @else {
+          <div class="add-list-form">
+            <input type="text" [(ngModel)]="nomeLista" placeholder="Digite o nome da lista..." autofocus />
+            <div class="form-actions">
+              <button (click)="addList(nomeLista)">Adicionar</button>
+              <button (click)="cancelAddList()" class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="auth-message">
+        Faça login para visualizar seu quadro
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Card Modal -->
+@if (isModalOpen) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Criar Novo Card em "{{ currentList?.nomeLista }}"</h2>
+      </div>
+      <div class="modal-form">
+        <div class="form-group">
+          <label for="cardname">Nome do Card</label>
+          <input
+            type="text"
+            id="cardname"
+            [(ngModel)]="cardname"
+            placeholder="Nome do Card"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="descricao">Descrição</label>
+          <textarea
+            id="descricao"
+            [(ngModel)]="descricao"
+            placeholder="Descrição"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="datafinal">Data de Vencimento</label>
+          <input
+            type="date"
+            id="datafinal"
+            [(ngModel)]="datafinal"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="prioridade">Prioridade</label>
+          <select id="prioridade" [(ngModel)]="prioridade">
+            <option value="">Selecione a Prioridade</option>
+            <option value="1">Baixa</option>
+            <option value="2">Média</option>
+            <option value="3">Alta</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button (click)="closeModal()" class="btn-cancel">Cancelar</button>
+          <button (click)="createCard()" class="btn-create">Criar Card</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entidades;
+using API.Extensions;
 using API.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,15 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CardController(DataContext context, ICardRepository cardRepository, IListaCardsRepository listaCardsRepository) : ControllerBase
+    public class CardController(DataContext context, ICardRepository cardRepository, IUsuarioRepository usuarioRepository, IListaCardsRepository listaCardsRepository) : ControllerBase
     {
         [HttpPost]
         public async Task<ActionResult<Card>> CreateCard(CardDTO cardDTO)
         {
             var listaCards = await listaCardsRepository.GetListaCard(cardDTO.ListaCardsId);
+
+            var user = await usuarioRepository.GetUsuarioById(User.GetUserId());
+
             var card = new Card()
             {
                 Cardname = cardDTO.Cardname,
@@ -23,6 +27,7 @@ namespace API.Controllers
                 Datafinal = cardDTO.Datafinal,
                 Prioridade = cardDTO.Prioridade,
                 ListaCards = listaCards,
+                Createby = user.Username,
             };
 
             context.Cards.Add(card);
@@ -41,8 +46,9 @@ namespace API.Controllers
 
 
         [HttpGet("{idCard:int}")]
-        public async Task<ActionResult> GetCard(int idCard){
-             var card = await cardRepository.GetCardById(idCard);
+        public async Task<ActionResult> GetCard(int idCard)
+        {
+            var card = await cardRepository.GetCardById(idCard);
             return Ok(card);
         }
 
@@ -63,11 +69,14 @@ namespace API.Controllers
 
             var listaCards = await listaCardsRepository.GetListaCard(cardDTO.ListaCardsId);
 
+           var user = await usuarioRepository.GetUsuarioById(User.GetUserId());
+
             var cardUpdate = new Card()
             {
                 Cardname = cardDTO.Cardname,
                 Descricao = cardDTO.Descricao,
                 ListaCards = listaCards,
+                Createby = user.Username
             };
 
             context.Cards.Update(cardUpdate);

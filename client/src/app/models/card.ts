@@ -5,6 +5,6 @@ export interface Card {
   createItem: string
   datafinal: string
   prioridade: number
-  criadoPor: string
+  createby: string
   responsavel: string
 }

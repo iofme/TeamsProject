@@ -3,6 +3,7 @@ using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Entidades;
+using API.Extensions;
 using API.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,10 +24,10 @@ namespace API.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Usuario>> GetUser(int id)
+        [HttpGet("logado")]
+        public async Task<ActionResult<Usuario>> GetUser()
         {
-            var user = await usuarioRepository.GetUsuarioById(id);
+            var user = await usuarioRepository.GetUsuarioById(User.GetUserId());
 
             return Ok(user);
         }

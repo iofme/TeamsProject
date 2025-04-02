@@ -51,9 +51,10 @@ namespace API.Data.Migrations
                     Cardname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateItem = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Createby = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Datafinal = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Prioridade = table.Column<int>(type: "int", nullable: false),
-                    ListaCardsId = table.Column<int>(type: "int", nullable: true)
+                    ListaCardsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +63,8 @@ namespace API.Data.Migrations
                         name: "FK_Cards_ListaCards_ListaCardsId",
                         column: x => x.ListaCardsId,
                         principalTable: "ListaCards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

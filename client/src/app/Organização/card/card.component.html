@@ -1,4 +1,4 @@
-<div class="card-container">
+<div class="card-container" [ngClass]="'priority-' + card.prioridade">
   <div class="card-header">
     <h3 class="card-title">{{card.cardname}}</h3>
     <span class="card-priority" [ngClass]="{
@@ -6,30 +6,30 @@
       'medium-priority': card.prioridade === 2,
       'high-priority': card.prioridade === 3
     }">
-      {{card.prioridade}}
+      {{getPriorityLabel(card.prioridade)}}
     </span>
   </div>
 
   <div class="card-body">
-    <p class="card-description">{{card.descricao}}</p>
+    <p class="card-description">{{card.descricao || 'Sem descrição'}}</p>
 
     <div class="card-details">
       <div class="card-meta">
         <div class="card-meta-item">
           <i class="material-icons">person</i>
-          <span>{{card.responsavel}}</span>
+          <span>{{card.responsavel || 'Não atribuído'}}</span>
         </div>
         <div class="card-meta-item">
           <i class="material-icons">create</i>
-          <span>{{card.createItem | date: "dd/MM/yyyy"}}</span>
+          <span>Criado: {{card.createItem | date: "dd/MM/yyyy"}}</span>
         </div>
         <div class="card-meta-item">
           <i class="material-icons">calendar_today</i>
-          <span>{{card.datafinal | date: "dd/MM/yyyy"}}</span>
+          <span>Prazo: {{card.datafinal | date: "dd/MM/yyyy"}}</span>
         </div>
         <div class="card-meta-item">
           <i class="material-icons">account_circle</i>
-          <span>{{card.criadoPor}}</span>
+          <span>Por: {{card.createby }}</span>
         </div>
       </div>
     </div>

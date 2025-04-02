@@ -37,6 +37,10 @@ namespace API.Data.Migrations
                     b.Property<DateTime>("CreateItem")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Createby")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Datafinal")
                         .HasColumnType("datetime2");
 
@@ -44,7 +48,7 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ListaCardsId")
+                    b.Property<int>("ListaCardsId")
                         .HasColumnType("int");
 
                     b.Property<int>("Prioridade")
@@ -112,9 +116,13 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entidades.Card", b =>
                 {
-                    b.HasOne("API.Entidades.ListaCards", null)
+                    b.HasOne("API.Entidades.ListaCards", "ListaCards")
                         .WithMany("Cards")
-                        .HasForeignKey("ListaCardsId");
+                        .HasForeignKey("ListaCardsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ListaCards");
                 });
 
             modelBuilder.Entity("API.Entidades.ListaCards", b =>

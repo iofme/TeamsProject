@@ -13,7 +13,11 @@ export class CardService {
     return this.http.get<Card>(`http://localhost:5240/api/card/${id}`)
   }
 
-  createCard(cardname: string, descricao: string, datafinal:string, prioridade: number, listaCardsId: number){
-    return this.http.post<Card>(`http://localhost:5240/api/card`, {cardname, descricao, datafinal, prioridade, listaCardsId})
+  createCard(cardname: string, descricao: string, datafinal:string, prioridade: number, listaCardsId: number, createby: any){
+    return this.http.post<Card>(`http://localhost:5240/api/card`, {cardname, descricao, datafinal, prioridade, listaCardsId, createby})
+  }
+
+  deleteCard(idCard: number){
+    return this.http.delete<Card>(`http://localhost:5240/api/card/${idCard}`)
   }
 }

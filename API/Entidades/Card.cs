@@ -12,6 +12,7 @@ namespace API.Entidades
         public required string Cardname { get; set; }
         public required string Descricao { get; set; }
         public DateTime CreateItem { get; set; } = DateTime.UtcNow;
+        public required string Createby { get; set; }
         public DateTime Datafinal { get; set; }
         public int Prioridade { get; set; }
         [JsonIgnore]

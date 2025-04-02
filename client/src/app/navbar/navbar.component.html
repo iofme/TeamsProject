@@ -1,7 +1,23 @@
 <header>
   <ul>
     <li><a routerLink="">organização</a></li>
-    <li><a routerLink="">Pessoas</a></li>
+    <li><a routerLink="pessoas">Pessoas</a></li>
     <li><input type="search" /></li>
   </ul>
+
+  <div>
+    @if(accountService.currentUser()){
+    <p>{{ accountService.currentUser()?.username }}</p>
+    <a href="perfil">View profile</a>
+    <button (click)="accountService.logout()">
+      <span>sair</span>
+    </button>
+  }
+  @if (!accountService.currentUser()) {
+    <button routerLink="login">
+      <span>Login</span>
+    </button>
+  }
+  </div>
+
 </header>
