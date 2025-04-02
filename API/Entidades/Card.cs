@@ -16,6 +16,6 @@ namespace API.Entidades
         public DateTime Datafinal { get; set; }
         public int Prioridade { get; set; }
         [JsonIgnore]
-        public ListaCards ListaCards { get; set; }
+        public ListaCards? ListaCards { get; set; }
     }
 }

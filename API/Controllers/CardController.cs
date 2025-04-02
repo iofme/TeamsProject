@@ -63,23 +63,25 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Card>> PutCard(CardDTO cardDTO)
+        [HttpPut("updatelist/{cardId:int}/{newListId:int}")]
+        public async Task<ActionResult> UpdateCardList(int cardId, int newListId)
         {
+            var card = await context.Cards.FindAsync(cardId);
+            if (card == null)
+                return NotFound("Card não encontrado");
 
-            var listaCards = await listaCardsRepository.GetListaCard(cardDTO.ListaCardsId);
+            var novaLista = await listaCardsRepository.GetListaCard(newListId);
+            if (novaLista == null)
+                return NotFound("Lista de destino não encontrada");
 
-           var user = await usuarioRepository.GetUsuarioById(User.GetUserId());
+            // Atualizar apenas a lista associada ao card
+            card.ListaCards = novaLista;
+            
 
-            var cardUpdate = new Card()
-            {
-                Cardname = cardDTO.Cardname,
-                Descricao = cardDTO.Descricao,
-                ListaCards = listaCards,
-                Createby = user.Username
-            };
+            // Salvar as alterações
+            await context.SaveChangesAsync();
+            context.Cards.Update(card);
 
-            context.Cards.Update(cardUpdate);
             return Ok();
         }
     }

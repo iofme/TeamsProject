@@ -20,4 +20,9 @@ export class CardService {
   deleteCard(idCard: number){
     return this.http.delete<Card>(`http://localhost:5240/api/card/${idCard}`)
   }
+
+  updateCardList(cardId: number, newListId: number) {
+    return this.http.put<Card>(`http://localhost:5240/api/card/updatelist/${cardId}/${newListId}`, {})
+  }
+  
 }

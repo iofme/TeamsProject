@@ -7,11 +7,19 @@ import { ListService } from '../../service/list.service';
 import { List } from '../../models/list';
 import { CardComponent } from '../card/card.component';
 import { AccountService } from '../../service/account.service';
+import {
+  CdkDropListGroup,
+  CdkDrag,
+  CdkDropList,
+  moveItemInArray,
+  transferArrayItem,
+  CdkDragDrop,
+} from  '@angular/cdk/drag-drop' ;
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule,FormsModule,CardComponent],
+  imports: [CommonModule,FormsModule,CardComponent, CdkDropListGroup, CdkDropList, CdkDrag],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
@@ -207,4 +215,48 @@ export class ListComponent implements OnInit {
       });
     }
   }
+
+
+  drop(event: CdkDragDrop<Card[]>) {
+    if (event.previousContainer === event.container) {
+      // Se o card for movido dentro da mesma lista
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      // Se o card for movido para outra lista
+      // Transfere o card e atualiza o idLista
+      const cardMoved = event.previousContainer.data[event.previousIndex];
+      
+      // Atualizar o ID da lista do card
+      const newListId = this.getListIdByContainer(event.container.id);
+      if (newListId) {
+        this.cardService.updateCardList(cardMoved.id, newListId).subscribe({
+          next: () => {
+            // Após sucesso na API, atualizar a UI
+            transferArrayItem(
+              event.previousContainer.data,
+              event.container.data,
+              event.previousIndex,
+              event.currentIndex
+            );
+          },
+          error: error => {
+            console.error('Erro ao mover o card:', error);
+            alert('Erro ao mover o card. Tente novamente.');
+          }
+        });
+      }
+    }
+  }
+  
+  // Método auxiliar para obter o ID da lista a partir do ID do container
+  getListIdByContainer(containerId: string): number | null {
+    // Assumindo que o ID do container segue o formato 'list-{id}'
+    const list = this.lists.find(list => `list-${list.id}` === containerId);
+    return list ? list.id : null;
+  }
+  
 }
