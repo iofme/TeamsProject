@@ -54,7 +54,7 @@ namespace API.Data.Migrations
                     Createby = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Datafinal = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Prioridade = table.Column<int>(type: "int", nullable: false),
-                    ListaCardsId = table.Column<int>(type: "int", nullable: false)
+                    ListaCardsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -63,6 +63,36 @@ namespace API.Data.Migrations
                         name: "FK_Cards_ListaCards_ListaCardsId",
                         column: x => x.ListaCardsId,
                         principalTable: "ListaCards",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SendUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipientUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateRead = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MessageSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    RecipientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Usuarios_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_Usuarios_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -71,6 +101,16 @@ namespace API.Data.Migrations
                 name: "IX_Cards_ListaCardsId",
                 table: "Cards",
                 column: "ListaCardsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_RecipientId",
+                table: "Messages",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_SenderId",
+                table: "Messages",
+                column: "SenderId");
         }
 
         /// <inheritdoc />
@@ -80,10 +120,13 @@ namespace API.Data.Migrations
                 name: "Cards");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "ListaCards");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
         }
     }
 }

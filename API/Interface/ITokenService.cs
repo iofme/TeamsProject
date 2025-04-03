@@ -6,8 +6,8 @@ using API.Entidades;
 
 namespace API.Interface
 {
-    public interface ITokenServices
+    public interface ITokenService
     {
-        string CreateToken(Usuario usuario);
+        Task<string> CreateToken(Usuario usuario);
     }
 }

@@ -11,6 +11,11 @@ namespace API.Data
             return context.Usuarios.FirstOrDefaultAsync(u => u.Id == id)!;
         }
 
+        public Task<Usuario> GetUsuarioByUsername(string username)
+        {
+            return context.Usuarios.FirstOrDefaultAsync(u => u.Username == username)!;
+        }
+
         public async Task<IEnumerable<Usuario>> GetUsuarios()
         {
             return await context.Usuarios.ToListAsync();

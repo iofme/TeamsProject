@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController(DataContext context, IUsuarioRepository usuarioRepository, ITokenServices tokenServices) : ControllerBase
+    public class AccountController(DataContext context, IUsuarioRepository usuarioRepository, ITokenService tokenServices) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<ActionResult<UsuarioDTO>> CreateUser(RegisterDTO registerDTO)
@@ -40,7 +40,7 @@ namespace API.Controllers
                 Foto = user.Foto,
                 DateBirth = user.DateBirth,
                 Funcao = user.Funcao,
-                Token = tokenServices.CreateToken(user)
+                Token =  await tokenServices.CreateToken(user)
             };
         }
         [HttpPost("login")]
@@ -64,7 +64,7 @@ namespace API.Controllers
                 Foto = user.Foto,
                 DateBirth = user.DateBirth,
                 Funcao = user.Funcao,
-                Token = tokenServices.CreateToken(user)
+                Token = await tokenServices.CreateToken(user)
             };
         }
     }

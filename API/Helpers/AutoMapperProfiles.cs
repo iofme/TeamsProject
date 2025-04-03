@@ -15,6 +15,7 @@ namespace API.Helpers
             CreateMap<Card, CardDTO>();
             CreateMap<Usuario, UsuarioDTO>();
             CreateMap<ListaCards, ListaCardsDTO>();
+            CreateMap<Message, MessageDTO>();
         }
     }
 }

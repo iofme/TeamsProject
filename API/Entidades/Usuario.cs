@@ -15,5 +15,8 @@ namespace API.Entidades
 
         public required byte[] PasswordHash { get; set; }
         public required byte[] PasswoedSalt { get; set; }
+
+        public List<Message> MessageSent { get; set; } = [];
+        public List<Message> MessagesReceived { get; set; } = [];
     }
 }

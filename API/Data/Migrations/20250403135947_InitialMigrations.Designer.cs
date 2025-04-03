@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250401134056_InitialMigrations")]
+    [Migration("20250403135947_InitialMigrations")]
     partial class InitialMigrations
     {
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ListaCardsId")
+                    b.Property<int?>("ListaCardsId")
                         .HasColumnType("int");
 
                     b.Property<int>("Prioridade")
@@ -79,6 +79,47 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ListaCards");
+                });
+
+            modelBuilder.Entity("API.Entidades.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateRead")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("MessageSent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecipientUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SendUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("API.Entidades.Usuario", b =>
@@ -121,16 +162,40 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entidades.ListaCards", "ListaCards")
                         .WithMany("Cards")
-                        .HasForeignKey("ListaCardsId")
+                        .HasForeignKey("ListaCardsId");
+
+                    b.Navigation("ListaCards");
+                });
+
+            modelBuilder.Entity("API.Entidades.Message", b =>
+                {
+                    b.HasOne("API.Entidades.Usuario", "Recipient")
+                        .WithMany("MessagesReceived")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Entidades.Usuario", "Sender")
+                        .WithMany("MessageSent")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ListaCards");
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("API.Entidades.ListaCards", b =>
                 {
                     b.Navigation("Cards");
+                });
+
+            modelBuilder.Entity("API.Entidades.Usuario", b =>
+                {
+                    b.Navigation("MessageSent");
+
+                    b.Navigation("MessagesReceived");
                 });
 #pragma warning restore 612, 618
         }
