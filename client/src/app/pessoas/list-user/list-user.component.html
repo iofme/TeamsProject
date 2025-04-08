@@ -1,1 +1,5 @@
-<p>list-user works!</p>
+@for (usuario of usuarios; track usuario.id) {
+  <p>{{usuario.username}}</p>
+
+  <app-message-person [usuario]="usuario.username"></app-message-person>
+}

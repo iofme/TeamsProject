@@ -8,6 +8,7 @@ using API.Helpers;
 using API.Interface;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
@@ -47,9 +48,19 @@ namespace API.Data
             return await PagedList<MessageDTO>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
 
-        public Task<IEnumerable<MessageDTO>> GetMessageThread(string currentUsername, string recipientUsername)
+        public async Task<IEnumerable<MessageDTO>> GetMessageThread(string currentUsername, string recipientUsername)
         {
-            throw new NotImplementedException();
+            var messages = await context.Messages.Include(x => x.Sender).Where(x => x.RecipientUser == currentUsername && x.SendUser == currentUsername || x.SendUser == currentUsername && x.RecipientUser == recipientUsername).OrderBy(x => x.MessageSent).ToListAsync();
+
+            var unreadMessages = messages.Where(x => x.DateRead == null && x.RecipientUser == currentUsername).ToList();
+
+            if(unreadMessages.Count != 0)
+            {
+                unreadMessages.ForEach(x => x.DateRead = DateTime.UtcNow);
+                await context.SaveChangesAsync();
+            }
+
+            return mapper.Map<IEnumerable<MessageDTO>>(messages);
         }
 
         public async Task<bool> SaveAllAsync()
